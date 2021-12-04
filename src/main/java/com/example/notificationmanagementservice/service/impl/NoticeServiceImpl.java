@@ -68,7 +68,7 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     public Notice createNotice(NoticeRequest noticeRequest) throws ServiceException, IOException {
-        String userName = "customAccountService.getUserName()";
+        String userName = customAccountService.getUserName();
         Date startDate = DateTimeUtil.convertStringToDate(noticeRequest.getStartDate(), DATE_FORMAT);
         Date endDate = DateTimeUtil.convertStringToDate(noticeRequest.getEndDate(), DATE_FORMAT);
         // find user
