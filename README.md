@@ -1,5 +1,4 @@
 # project-notice-service
-# notification-management-service
 REST API to manage notification information
 
 ## Features
@@ -36,5 +35,5 @@ REST API to manage notification information
 - Note: An IDE like IntelliJ can perform these tasks for you automatically
 ## How To Get Started
 - You need to run project and create one user: API POST/user
-- Use information user you just created to get token by api POST/login
+- Use information user you just created to get token by api POST/authenticate
 - Use that token to perform actions: get, delete, update notifications and users
