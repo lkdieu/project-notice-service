@@ -1,5 +1,5 @@
 # project-notice-service
-REST API to manage notification information
+REST API to manage notice information
 
 ## Features
 
