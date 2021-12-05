@@ -2,7 +2,7 @@ package com.example.notificationmanagementservice.controller;
 
 import com.example.notificationmanagementservice.dto.request.AuthRequest;
 import com.example.notificationmanagementservice.config.JwtUtil;
-import com.example.notificationmanagementservice.exception.ServiceException;
+import com.example.notificationmanagementservice.util.MessageConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +36,7 @@ public class WelcomeController {
 
     @GetMapping("/")
     public String welcome() {
-        return "Welcome!!";
+        return MessageConstants.WELCOME;
     }
 
 
@@ -54,7 +54,7 @@ public class WelcomeController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword()));
         } catch (Exception ex) {
             log.error("Start generateToken result {}", ex.getMessage());
-            throw new Exception("invalid username/password");
+            throw new Exception(MessageConstants.INVALID_USERNAME_PASSWORD);
         }
         return jwtUtil.generateToken(authRequest.getUserName());
     }

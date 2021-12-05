@@ -1,5 +1,6 @@
 package com.example.notificationmanagementservice.exception;
 
+import com.example.notificationmanagementservice.util.MessageConstants;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        body.put("errors", errors);
+        body.put(MessageConstants.ERROR, errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

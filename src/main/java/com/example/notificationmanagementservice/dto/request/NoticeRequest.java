@@ -23,11 +23,9 @@ public class NoticeRequest {
     private String content;
 
     @NotBlank(message = "The startDate date is required.")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String startDate;
 
     @NotBlank(message = "The endDate date is required.")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String endDate;
 
     private MultipartFile[] multipartFile;

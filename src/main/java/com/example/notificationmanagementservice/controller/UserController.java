@@ -3,6 +3,7 @@ package com.example.notificationmanagementservice.controller;
 import com.example.notificationmanagementservice.dto.request.UserRequest;
 import com.example.notificationmanagementservice.exception.ServiceException;
 import com.example.notificationmanagementservice.service.UserService;
+import com.example.notificationmanagementservice.util.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest) throws Exception {
         userService.createUser(userRequest);
-        return ResponseEntity.ok().body("Success");
+        return ResponseEntity.ok().body(MessageConstants.SUCCESS);
     }
 }

@@ -6,7 +6,6 @@ import com.example.notificationmanagementservice.entity.User;
 import com.example.notificationmanagementservice.exception.ServiceException;
 import com.example.notificationmanagementservice.repository.NoticeRepository;
 import com.example.notificationmanagementservice.repository.UserRepository;
-import com.example.notificationmanagementservice.service.CustomAccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,7 +36,7 @@ public class NoticeServiceImplTest {
     private NoticeServiceImpl noticeServiceImpl;
 
     @Mock
-    private CustomAccountService customAccountService;
+    private CustomAccountServiceImpl customAccountServiceImpl;
 
     @Test
     public void whenCallCreateNotice_Success() throws  ServiceException, IOException {
@@ -56,12 +55,12 @@ public class NoticeServiceImplTest {
     }
 
     @Test
-    public void whenCallUpdateNotice_successfull() throws Exception {
+    public void whenCallUpdateNotice_successful() throws Exception {
         NoticeRequest noticeRequest = new NoticeRequest();
         noticeRequest.setContent("123");
         noticeRequest.setTitle("abc");
         Notice notice = setDataNotice();
-        Mockito.when(customAccountService.getUserName()).thenReturn("asas");
+        Mockito.when(customAccountServiceImpl.getUserName()).thenReturn("asas");
         Mockito.when(noticeRepository.findById(any())).thenReturn(Optional.of(notice));
         noticeServiceImpl.updateNotice(noticeRequest, 1L);
     }
@@ -76,9 +75,9 @@ public class NoticeServiceImplTest {
     }
 
     @Test
-    public void whenCallDeleteNotice_successfull() throws Exception {
+    public void whenCallDeleteNotice_successful() throws Exception {
         Notice notice = setDataNotice();
-        Mockito.when(customAccountService.getUserName()).thenReturn("asas");
+        Mockito.when(customAccountServiceImpl.getUserName()).thenReturn("asas");
         Mockito.when(noticeRepository.findById(any())).thenReturn(Optional.of(notice));
         noticeServiceImpl.deleteNotice(1L);
     }
@@ -90,7 +89,7 @@ public class NoticeServiceImplTest {
     }
 
     @Test
-    public void getById_success() throws Exception {
+    public void getById_success(){
         User user = new User();
         Notice notice = setDataNotice();
         Mockito.when(noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableIsTrue(any(),any())).thenReturn(Optional.of(notice));
@@ -98,7 +97,7 @@ public class NoticeServiceImplTest {
     }
 
     @Test(expected = Exception.class)
-    public void whenCallGetById_throwError() throws Exception {
+    public void whenCallGetById_throwError(){
         Notice notice = setDataNotice();
         noticeServiceImpl.getDetails(any());
     }

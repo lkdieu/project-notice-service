@@ -1,6 +1,7 @@
 package com.example.notificationmanagementservice.config;
 
-import com.example.notificationmanagementservice.service.CustomAccountService;
+import com.example.notificationmanagementservice.service.impl.CustomAccountServiceImpl;
+import com.example.notificationmanagementservice.util.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomAccountService userDetailsService;
+    private CustomAccountServiceImpl userDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -43,9 +44,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/authenticate").permitAll()
-                .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.POST ,"/user").permitAll()
+        http.csrf().disable().authorizeRequests().antMatchers(MessageConstants.URL_AUTHENTICATION).permitAll()
+                .antMatchers(MessageConstants.URL_DEFAULT).permitAll()
+                .antMatchers(HttpMethod.POST ,MessageConstants.URL_USER).permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

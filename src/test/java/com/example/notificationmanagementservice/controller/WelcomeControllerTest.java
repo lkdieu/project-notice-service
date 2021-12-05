@@ -2,7 +2,7 @@ package com.example.notificationmanagementservice.controller;
 
 import com.example.notificationmanagementservice.config.JwtUtil;
 import com.example.notificationmanagementservice.dto.request.AuthRequest;
-import com.example.notificationmanagementservice.service.CustomAccountService;
+import com.example.notificationmanagementservice.service.impl.CustomAccountServiceImpl;
 import com.example.notificationmanagementservice.service.NoticeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -21,9 +21,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -54,7 +51,7 @@ class WelcomeControllerTest {
     private NoticeService noticeService;
 
     @MockBean
-    private CustomAccountService customAccountService;
+    private CustomAccountServiceImpl customAccountServiceImpl;
 
 
     @Test

@@ -5,7 +5,7 @@ import com.example.notificationmanagementservice.dto.NoticeDto;
 import com.example.notificationmanagementservice.dto.request.NoticeRequest;
 import com.example.notificationmanagementservice.entity.Notice;
 import com.example.notificationmanagementservice.entity.User;
-import com.example.notificationmanagementservice.service.CustomAccountService;
+import com.example.notificationmanagementservice.service.impl.CustomAccountServiceImpl;
 import com.example.notificationmanagementservice.service.NoticeService;
 import com.example.notificationmanagementservice.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +42,7 @@ public class NotificationControllerTest {
     private NoticeService noticeService;
 
     @MockBean
-    private CustomAccountService customAccountService;
+    private CustomAccountServiceImpl customAccountServiceImpl;
 
     @MockBean
     private JwtUtil jwtUtil;
@@ -73,11 +73,8 @@ public class NotificationControllerTest {
     @Test
     public void testGetAllNotice() throws Exception {
         List<Notice> notice = new ArrayList<>();
-        User user = new User();
-
-        Object noticeList = null;
-        PageImpl noticePage = new PageImpl(notice);
-        when(noticeService.getAllNotice(Mockito.any(), Mockito.any())).thenReturn(noticePage);
+        PageImpl<Notice> noticePage = new PageImpl<>(notice);
+        when(noticeService.getAllNotice(Mockito.anyInt(), Mockito.anyInt())).thenReturn(noticePage);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON);
@@ -89,7 +86,7 @@ public class NotificationControllerTest {
         Notice noticeEntity = new Notice();
         noticeEntity.setContent("content");
         noticeEntity.setTitle("abc");
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(BASE_URL +"/1")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(BASE_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(noticeEntity));
@@ -130,7 +127,18 @@ public class NotificationControllerTest {
         mockMvc.perform(requestBuilder).andExpect(status().is5xxServerError());
     }
 
-    public static String asJsonString(final Object obj) {
+    @Test
+    public void getNoticeByUser() throws Exception {
+        List<Notice> notice = new ArrayList<>();
+        PageImpl<Notice> noticePage = new PageImpl<>(notice);
+        when(noticeService.getNoticesByUser(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).thenReturn(noticePage);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(BASE_URL + "username")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON);
+        mockMvc.perform(requestBuilder);
+    }
+
+    private static String asJsonString(final Object obj) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(obj);

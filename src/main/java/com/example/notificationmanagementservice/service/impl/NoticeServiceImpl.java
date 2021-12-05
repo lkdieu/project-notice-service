@@ -11,9 +11,9 @@ import com.example.notificationmanagementservice.exception.ServiceException;
 import com.example.notificationmanagementservice.repository.AttachedFileRepository;
 import com.example.notificationmanagementservice.repository.NoticeRepository;
 import com.example.notificationmanagementservice.repository.UserRepository;
-import com.example.notificationmanagementservice.service.CustomAccountService;
 import com.example.notificationmanagementservice.service.NoticeService;
 import com.example.notificationmanagementservice.util.DateTimeUtil;
+import com.example.notificationmanagementservice.util.MessageConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
@@ -45,11 +45,10 @@ import java.util.*;
 @Slf4j
 public class NoticeServiceImpl implements NoticeService {
 
-    private final Path root = Paths.get("uploads");
-    private final String DATE_FORMAT = "yyyy-MM-dd";
+    private final Path root = Paths.get(MessageConstants.FOLDER);
 
     @Autowired
-    private CustomAccountService customAccountService;
+    private CustomAccountServiceImpl customAccountServiceImpl;
 
     @Autowired
     private NoticeRepository noticeRepository;
@@ -60,20 +59,17 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private AttachedFileRepository attachedFileRepository;
 
-    /**
-     * Create new notice
-     * @param noticeRequest noticeRequest
-     * @return Notice
-     * @throws ServiceException If string's byte cannot be obtained
-     */
     @Override
     public Notice createNotice(NoticeRequest noticeRequest) throws ServiceException, IOException {
-        String userName = customAccountService.getUserName();
-        Date startDate = DateTimeUtil.convertStringToDate(noticeRequest.getStartDate(), DATE_FORMAT);
-        Date endDate = DateTimeUtil.convertStringToDate(noticeRequest.getEndDate(), DATE_FORMAT);
+        //Get current username information
+        String userName = customAccountServiceImpl.getUserName();
+        //Format date
+        Date startDate = DateTimeUtil.convertStringToDate(noticeRequest.getStartDate(), MessageConstants.DATE_FORMAT);
+        Date endDate = DateTimeUtil.convertStringToDate(noticeRequest.getEndDate(), MessageConstants.DATE_FORMAT);
         // find user
         User user = userRepository.findByUserName(userName).orElse(null);
         log.info("Start findByUserName, result {}", user);
+        //Set uop data for Noctice
         Notice notice = new Notice();
         notice.setContent(noticeRequest.getContent());
         notice.setTitle(noticeRequest.getTitle());
@@ -82,6 +78,7 @@ public class NoticeServiceImpl implements NoticeService {
         notice.setStartDate(startDate);
         notice.setViewNumber(0);
         notice.setUser(user);
+        //save file
         List<AttachedFile> attachedFileList = handleMultipleFiles(noticeRequest.getMultipartFile());
         notice.setAttachFiles(attachedFileList);
         return noticeRepository.save(notice);
@@ -90,31 +87,33 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * Get All Notice
-     * @param size size
-     * @param page page
+     *
+     * @param offset size
+     * @param limit  page
      * @return Page<Notice>
      */
     @Override
     @Cacheable("notice")
-    public Page<Notice> getAllNotice(Integer size, Integer page) {
+    public Page<Notice> getAllNotice(int offset, int limit) {
         Date date = new Date();
-        Pageable pageable = PageRequest.of(page, size, Sort.by("lastModifiedDate").descending());
+        Pageable pageable = PageRequest.of(offset, limit, Sort.by(MessageConstants.LAST_MODIFIED_DATE).descending());
+        //Find All By Start Date Less Than Equal And End Date Greater Than Equal And Is Enable Is True
         Page<Notice> noticeDtoPage = noticeRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndIsEnableIsTrue(date, date, pageable);
         log.info("Start findAllWithEnd result {}", noticeDtoPage);
         return noticeDtoPage;
     }
 
-    /**
-     * Get Details
-     * @param id notice id
-     * @return json NoticeDto
-     */
+
     @Override
     @Cacheable(cacheNames = "notice", key = "#id")
     public NoticeDto getDetails(Long id) {
-        Notice notice = noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableIsTrue(new Date(), id).orElseThrow(() -> new ResourceNotFoundException("Invalid notice Id:" + id));
+        //Find All By Start Date Less Than Equal And Is Enable Is True
+        Notice notice = noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableIsTrue(new Date(), id)
+                .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.INVALID_NOTICE_ID + id));
+        //View plus 1 and save
         notice.setViewNumber(notice.getViewNumber() + 1);
         noticeRepository.saveAndFlush(notice);
+        log.info("Start saveAndFlush result: {}", notice);
         NoticeDto noticeDto = new NoticeDto();
         BeanUtils.copyProperties(Objects.requireNonNull(notice), noticeDto);
         noticeDto.setUser(notice.getUser().getUserName());
@@ -129,34 +128,27 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeDto;
     }
 
-    /**
-     * Delete notice
-     * @param id notice id
-     * @throws NotificationServiceException If string's byte cannot be obtained
-     */
+
     @Override
     @CacheEvict(cacheNames = "notice", key = "#id")
     public void deleteNotice(Long id) throws NotificationServiceException {
-        Notice notice = noticeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invalid notice Id:" + id));
+        Notice notice = noticeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MessageConstants.INVALID_NOTICE_ID + id));
         validateUser(notice.getUser().getUserName());
         notice.setIsEnable(false);
         noticeRepository.save(notice);
     }
 
-    /**
-     * Update Notice
-     * @param noticeRequest noticeRequest
-     * @param id id
-     * @return json noticeEntity
-     * @throws ServiceException If string's byte cannot be obtained
-     */
+
     @Override
     @CachePut(cacheNames = "notice", key = "#id")
     public Notice updateNotice(NoticeRequest noticeRequest, Long id) throws ServiceException, IOException {
-        Notice notice = noticeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invalid notice Id:" + id));
+        //find by notice id
+        Notice notice = noticeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MessageConstants.INVALID_NOTICE_ID + id));
+        // validate user name
         validateUser(notice.getUser().getUserName());
-        BeanUtils.copyProperties(notice, noticeRequest);
-        if (noticeRequest.getMultipartFile() !=null){
+        //Set up
+        BeanUtils.copyProperties(noticeRequest, notice);
+        if (noticeRequest.getMultipartFile() != null) {
             List<AttachedFile> attachedFileList = handleMultipleFiles(noticeRequest.getMultipartFile());
             notice.setAttachFiles(attachedFileList);
         }
@@ -164,14 +156,27 @@ public class NoticeServiceImpl implements NoticeService {
 
     }
 
+    @Override
+    public Page<Notice> getNoticesByUser(int offset, int limit, String userName) throws NotificationServiceException {
+        Pageable pageable = PageRequest.of(offset, limit);
+        //validate User
+        validateUser(userName);
+        //find user name
+        User user = userRepository.findByUserName(userName).orElseThrow(() -> new ResourceNotFoundException(MessageConstants.INVALID_USERNAME + userName));
+        log.info("Start findByUserName result: {}", user);
+        return noticeRepository.findByUserId(user.getId(), pageable);
+    }
+
     private void validateUser(String userName) throws NotificationServiceException {
-        String name = customAccountService.getUserName();
+        String name = customAccountServiceImpl.getUserName();
+        log.info("Start validateUser result: {}", name);
         if (!name.equals(userName)) {
             throw new NotificationServiceException(HttpStatus.FORBIDDEN.name(), HttpStatus.FORBIDDEN.getReasonPhrase());
         }
     }
 
     private List<AttachedFile> handleMultipleFiles(MultipartFile[] files) throws ServiceException, IOException {
+        // check Paths If it doesn't exist, create a new one
         if (root == null) {
             Files.createDirectory(root);
         }
@@ -183,8 +188,8 @@ public class NoticeServiceImpl implements NoticeService {
                 log.error("run save file {}", e.getMessage());
                 throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR.name(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
             }
+            // get all name files
             AttachedFile attachedFile = new AttachedFile();
-
             Path pathFile = root.resolve(Objects.requireNonNull(file.getOriginalFilename()));
             Resource resource = new UrlResource(pathFile.toUri());
             attachedFile.setName(resource.getURL().getFile());

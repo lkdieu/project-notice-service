@@ -1,7 +1,6 @@
 package com.example.notificationmanagementservice.config;
 
-import com.example.notificationmanagementservice.service.CustomAccountService;
-import com.example.notificationmanagementservice.config.JwtUtil;
+import com.example.notificationmanagementservice.service.impl.CustomAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +19,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private CustomAccountService userService;
+    private CustomAccountServiceImpl userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
