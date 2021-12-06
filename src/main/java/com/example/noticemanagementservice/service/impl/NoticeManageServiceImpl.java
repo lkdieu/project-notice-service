@@ -96,9 +96,9 @@ public class NoticeManageServiceImpl implements NoticeManageService {
     @Cacheable("notice")
     public Page<Notice> getAllNotice(int offset, int limit) {
         Date date = new Date();
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by(MessageConstants.LAST_MODIFIED_DATE).descending());
+        Pageable pageable = PageRequest.of(offset, limit);
         //Find All By Start Date Less Than Equal And End Date Greater Than Equal And Is Enable Is True
-        Page<Notice> noticeDtoPage = noticeRepository.findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndIsEnableIsTrue(date, date, pageable);
+        Page<Notice> noticeDtoPage = noticeRepository.findAllByEndDateGreaterThanEqualAndIsEnableIsTrue(date, pageable);
         log.info("Start findAllWithEnd result {}", noticeDtoPage);
         return noticeDtoPage;
     }
@@ -108,7 +108,7 @@ public class NoticeManageServiceImpl implements NoticeManageService {
     @Cacheable(cacheNames = "notice", key = "#id")
     public NoticeDto getDetails(Long id) {
         //Find All By Start Date Less Than Equal And Is Enable Is True
-        Notice notice = noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableIsTrue(new Date(), id)
+        Notice notice = noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableTrue(id, new Date())
                 .orElseThrow(() -> new ResourceNotFoundException(MessageConstants.INVALID_NOTICE_ID + id));
         //View plus 1 and save
         notice.setViewNumber(notice.getViewNumber() + 1);
@@ -117,11 +117,9 @@ public class NoticeManageServiceImpl implements NoticeManageService {
         NoticeDto noticeDto = new NoticeDto();
         BeanUtils.copyProperties(Objects.requireNonNull(notice), noticeDto);
         noticeDto.setUser(notice.getUser().getUserName());
-        List<String> image = new ArrayList<>();
+        List<AttachedFile> image = new ArrayList<>();
         if (notice.getAttachFiles() != null) {
-            for (AttachedFile attachedFile : notice.getAttachFiles()) {
-                image.add(attachedFile.getName());
-            }
+            image.addAll(notice.getAttachFiles());
         }
         noticeDto.setImage(image);
 
@@ -177,7 +175,7 @@ public class NoticeManageServiceImpl implements NoticeManageService {
 
     private List<AttachedFile> handleMultipleFiles(MultipartFile[] files) throws ServiceException, IOException {
         // check Paths If it doesn't exist, create a new one
-        if (!Files.exists(root)){
+        if (!Files.exists(root)) {
             Files.createDirectory(root);
         }
         List<AttachedFile> attachedFileList = new ArrayList<>();

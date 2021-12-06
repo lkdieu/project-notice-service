@@ -4,7 +4,7 @@ import com.example.noticemanagementservice.dto.request.UserRequest;
 
 public interface UserService {
     /**
-     * Create new notice
+     * Create new user
      *
      * @param userRequest noticeRequest
      * @throws Exception If string's byte cannot be obtained

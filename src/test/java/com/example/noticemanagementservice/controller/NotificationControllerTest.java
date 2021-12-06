@@ -116,8 +116,6 @@ public class NotificationControllerTest {
         NoticeDto noticeDto = new NoticeDto();
         noticeDto.setContent("Exec");
         noticeDto.setTitle("Exec");
-        noticeDto.setEndDate("2021-06-12 10:20:30");
-        noticeDto.setStartDate("2021-06-12 10:20:30");
         doThrow(Exception.class).when(noticeManageService).createNotice(any());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

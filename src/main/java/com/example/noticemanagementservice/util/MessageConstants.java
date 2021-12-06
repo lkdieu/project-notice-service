@@ -22,7 +22,10 @@ public class MessageConstants {
     public static final String INVALID_USERNAME_PASSWORD = "invalid username/password";
 
     //URL
-    public static final String URL_AUTHENTICATION = "/authenticate";
+    public static final String URL = "/login";
     public static final String URL_USER = "/user";
     public static final String URL_DEFAULT = "/";
+    public static final String BEARER_TOKEN = "token";
+    public static final String OFFSET = "0";
+    public static final String LIMIT = "20";
 }

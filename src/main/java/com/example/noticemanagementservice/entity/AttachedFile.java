@@ -1,5 +1,6 @@
 package com.example.noticemanagementservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ public class AttachedFile extends Base implements Serializable {
     @Column
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "notice_id", referencedColumnName = "id")
-    private Notice notice;
+    @JsonIgnore
+    @JoinColumn(name = "notice_id")
+    private Long notice;
 }

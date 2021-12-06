@@ -6,6 +6,7 @@ import com.example.noticemanagementservice.entity.Notice;
 import com.example.noticemanagementservice.exception.NoticeServiceException;
 import com.example.noticemanagementservice.exception.ServiceException;
 import com.example.noticemanagementservice.service.NoticeManageService;
+import com.example.noticemanagementservice.util.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +38,12 @@ public class NotificationController {
 
     /**
      * Get all notice
-     * @param  size size
-     * @param page page
+     * @param  offset offset
+     * @param limit limit
      * @return delete successful
      */
     @GetMapping
-    public ResponseEntity<?> getAllNotice(@RequestParam(required = false, defaultValue = "20") int offset, @RequestParam(required = false, defaultValue = "20") int limit) {
+    public ResponseEntity<?> getAllNotice(@RequestParam(required = false, defaultValue = MessageConstants.OFFSET) int offset, @RequestParam(required = false, defaultValue = MessageConstants.LIMIT) int limit) {
         return ResponseEntity.ok(noticeManageService.getAllNotice(offset, limit));
     }
 
@@ -78,7 +79,7 @@ public class NotificationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNotice(@PathVariable Long id) throws Exception {
         noticeManageService.deleteNotice(id);
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(MessageConstants.SUCCESS);
     }
 
     /**
@@ -88,9 +89,9 @@ public class NotificationController {
      * @param limit:  paging limit
      * @return list of notice with paging
      */
-    @GetMapping("/user")
-    public ResponseEntity<?> getNoticeByUser(@RequestParam(defaultValue = "0") int offset,
-                                        @RequestParam(defaultValue = "10") int limit,  @PathVariable String userName) throws NoticeServiceException {
+    @GetMapping("user/{userName}")
+    public ResponseEntity<?> getNoticeByUser(@RequestParam(defaultValue = MessageConstants.OFFSET) int offset,
+                                        @RequestParam(defaultValue = MessageConstants.LIMIT) int limit,  @PathVariable String userName) throws NoticeServiceException {
         return ResponseEntity.ok(noticeManageService.getNoticesByUser(offset, limit, userName));
     }
 

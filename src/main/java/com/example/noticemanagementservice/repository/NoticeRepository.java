@@ -12,10 +12,9 @@ import java.util.Optional;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-    //Find All By Start Date Less Than Equal And End Date Greater Than Equal And Is Enable Is True
-    Page<Notice> findAllByStartDateLessThanEqualAndEndDateGreaterThanEqualAndIsEnableIsTrue(Date startDate, Date endDate, Pageable pageable);
-
-    Optional<Notice> findByIdAndEndDateGreaterThanEqualAndIsEnableIsTrue(Date date, Long id);
+    Optional<Notice> findByIdAndEndDateGreaterThanEqualAndIsEnableTrue(Long id, Date date);
 
     Page<Notice> findByUserId(Long id, Pageable pageable);
+
+    Page<Notice> findAllByEndDateGreaterThanEqualAndIsEnableIsTrue(Date date, Pageable pageable);
 }

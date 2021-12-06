@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 class WelcomeControllerTest {
 
-    public static final String BASE_URL ="/authenticate";
+    public static final String BASE_URL ="/login";
 
     @Autowired
     private MockMvc mockMvc;

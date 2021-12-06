@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
 
 /**
  * Authentication Manager
@@ -42,12 +44,14 @@ public class WelcomeController {
 
     /**
      * Create new user
+     *
      * @param authRequest userRequest
      * @return generateToken
      * @throws Exception If string's byte cannot be obtained
      */
-    @PostMapping("/authenticate")
-    public String generateToken(@RequestBody AuthRequest authRequest) throws Exception {
+    @PostMapping("/login")
+    public HashMap<String, String> generateToken(@RequestBody AuthRequest authRequest) throws Exception {
+        HashMap<String, String> response = new HashMap<>();
         try {
             userDetailsService.loadUserByUsername(authRequest.getUserName());
             authenticationManager.authenticate(
@@ -56,6 +60,8 @@ public class WelcomeController {
             log.error("Start generateToken result {}", ex.getMessage());
             throw new Exception(MessageConstants.INVALID_USERNAME_PASSWORD);
         }
-        return jwtUtil.generateToken(authRequest.getUserName());
+
+        response.put(MessageConstants.BEARER_TOKEN, jwtUtil.generateToken(authRequest.getUserName()));
+        return response;
     }
 }

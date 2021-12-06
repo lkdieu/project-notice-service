@@ -46,8 +46,8 @@ public class Notice extends Base implements Serializable {
     @Column
     private Boolean isEnable;
 
-
-    @OneToMany(mappedBy = "notice",cascade = CascadeType.ALL)
+    @JoinColumn(name = "notice_id", referencedColumnName = "id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<AttachedFile> attachFiles;
 
     @ManyToOne

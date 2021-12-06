@@ -92,7 +92,7 @@ public class NoticeManageServiceImplTest {
     public void getById_success(){
         User user = new User();
         Notice notice = setDataNotice();
-        Mockito.when(noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableIsTrue(any(),any())).thenReturn(Optional.of(notice));
+        Mockito.when(noticeRepository.findByIdAndEndDateGreaterThanEqualAndIsEnableTrue(any(),any())).thenReturn(Optional.of(notice));
         noticeServiceImpl.getDetails(1L);
     }
 
