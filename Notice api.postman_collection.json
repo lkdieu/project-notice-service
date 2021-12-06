@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "da06e7c0-4a0a-49d3-96cb-f1382aee24c7",
+		"name": "Notice api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"dieulk35\",\r\n    \"password\": \"123\",\r\n    \"name\": \"aa\",\r\n    \"email\": \"lkdieu@email\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create notice",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWV1bGszNSIsImV4cCI6MTYzODgwMTI4NCwiaWF0IjoxNjM4NzY1Mjg0fQ.RbwlzU6-wbuo2iVgopvMcAqc3B191Q6gWaAAfzfZjgA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "multipartFile",
+							"type": "file",
+							"src": "/C:/Users/Admin/Pictures/96953688_1562742673904016_3564826480632397824_n.jpg"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-01-12",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "content",
+							"type": "text"
+						},
+						{
+							"key": "startDate",
+							"value": "2021-12-12",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "title",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/notices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"dieulk35\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get notice by userName",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWV1bGszNSIsImV4cCI6MTYzODgwOTg5MCwiaWF0IjoxNjM4NzczODkwfQ.OcZqzS8Dz1YA-iUscaZj_i0dfz4xvASyXRTuz7jiFYU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/notices/user/dieulk35",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notices",
+						"user",
+						"dieulk35"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get notice Detail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWV1bGszNSIsImV4cCI6MTYzODgwODI5MSwiaWF0IjoxNjM4NzcyMjkxfQ.IQw8V9dMADdhoX_w9Y8OvySoVCmORTIPuFeZtOqAM6o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notices/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notices",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Notice",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWV1bGszNSIsImV4cCI6MTYzODgwODI5MSwiaWF0IjoxNjM4NzcyMjkxfQ.IQw8V9dMADdhoX_w9Y8OvySoVCmORTIPuFeZtOqAM6o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notices/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notices",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update notice",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWV1bGszNSIsImV4cCI6MTYzODgwMTI4NCwiaWF0IjoxNjM4NzY1Mjg0fQ.RbwlzU6-wbuo2iVgopvMcAqc3B191Q6gWaAAfzfZjgA"
+					},
+					{
+						"key": "Cookie",
+						"value": "JSESSIONID=0AAB55B4B4FBE20EE268CBC079BEF23F"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "multipartFile",
+							"type": "file",
+							"src": "/C:/Users/Admin/Pictures/Screenshots/Screenshot (1).png"
+						},
+						{
+							"key": "endDate",
+							"value": "\"2022-01-12\"",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "\"123212313\"",
+							"type": "text"
+						},
+						{
+							"key": "startDate",
+							"value": "\"2021-12-12\"",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "\"123\"",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/notices/13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notices",
+						"13"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
